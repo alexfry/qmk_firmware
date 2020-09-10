@@ -21,15 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID 0xFEED
-#define PRODUCT_ID 0x0000
+#define PRODUCT_ID 0x0001
 #define DEVICE_VER 0x0001
 #define MANUFACTURER Alex Fry
-#define PRODUCT FnCoder24
+#define PRODUCT FnCoder84
 #define DESCRIPTION A custom keyboard
 
 /* key matrix size */
 #define MATRIX_ROWS 6
-#define MATRIX_COLS 4
+#define MATRIX_COLS 15
 
 /*
  * Keyboard Matrix Assignments
@@ -46,8 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define ENCODERS_PAD_B { A2, A0, B13, B15}
 
 // promico pins
-#define ENCODERS_PAD_A { F5, F7, B3, B6}
-#define ENCODERS_PAD_B { F4, F6, B1, B2}
+#define ENCODERS_PAD_A { B6, B2, B0, E6, D6, E1, C3, C6, A4, A7, A2}
+#define ENCODERS_PAD_B { B5, B1, E7, B7, D7, C0, C4, C7, A5, F4, A1}
 
 //#define ENCODERS_PAD_C { B0, B1, B2, B3 }
 
@@ -60,8 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define UNUSED_PINS
 
 // promicoc pins
-#define MATRIX_ROW_PINS { D4, C6, D7, E6, B4, B5}
-#define MATRIX_COL_PINS { D3, D2, D1, D0}
+#define MATRIX_ROW_PINS { D3, D5, D4, D2, C1, B4}
+#define MATRIX_COL_PINS { F3, B3, F2, D0, D1, E0, C2, C5, F5, A6, A3, A0, F1, F7, F6}
 #define UNUSED_PINS
 
 /* COL2ROW, ROW2COL*/
@@ -70,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.
  */
-#define SOFT_SERIAL_PIN D0  // or D1, D2, D3, E6
+//#define SOFT_SERIAL_PIN D0  // or D1, D2, D3, E6
 
 //MIDI
 #define MIDI_ADVANCED

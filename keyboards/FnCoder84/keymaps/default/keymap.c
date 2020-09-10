@@ -25,37 +25,61 @@ enum layer_names {
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
-    MI_CH0_Click,
-    MI_CH1_Click,
+    MI_CH1_Click = SAFE_RANGE,
     MI_CH2_Click,
-    MI_CH3_Click
+    MI_CH3_Click,
+    MI_CH4_Click,
+    MI_CH5_Click,
+    MI_CH6_Click,
+    MI_CH7_Click,
+    MI_CH8_Click,
+    MI_CH9_Click,
+    MI_CH10_Click,
+    MI_CH11_Click,
+    MI_CH12_Click   
 };
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT( /* Base */
-      MI_CH0_Click, MI_CH1_Click, MI_CH2_Click, MI_CH3_Click,\
-      KC_NLCK, KC_KP_SLASH, KC_KP_ASTERISK, KC_KP_MINUS,\
-      KC_KP_7, KC_KP_8, KC_KP_9, KC_KP_PLUS,\
-      KC_KP_4, KC_KP_5, KC_KP_6,_______,\
-      KC_KP_1, KC_KP_2, KC_KP_3, KC_KP_ENTER,\
-      KC_KP_0, KC_KP_DOT,_______,_______\
-    ),
+    KEYMAP(
+		KC_ESC, MI_CH1_Click, MI_CH2_Click, MI_CH3_Click, MI_CH4_Click, MI_CH5_Click, MI_CH6_Click, MI_CH7_Click, MI_CH8_Click, MI_CH9_Click, MI_CH10_Click, MI_CH11_Click, KC_F12, MO(1), MO(2), 
+		KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, KC_EQL, KC_BSPC, KC_DEL, 
+		KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, 
+		MO(1), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_ENT, KC_PGDN, KC_PGUP, 
+		KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_LSFT, KC_UP, KC_END, 
+		KC_LCTL, KC_LGUI, KC_LALT, KC_SPC, KC_LALT, MO(3), KC_LCTL, KC_LEFT, KC_DOWN, KC_RIGHT),
+
+
+    KEYMAP(
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC__MUTE, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+    
+    KEYMAP(
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC__MUTE, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+    
+    KEYMAP(
+		KC_TRNS, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_TRNS, TG(1), TG(2), 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, RESET, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PGUP, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_HOME, KC_PGDN, KC_END),
+
 };
 
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case MI_CH0_Click:
-            if (record->event.pressed) {
-                // when keycode QMKBEST is pressed
-                midi_send_cc(&midi_device, 1, 0, 127);
-            } else {
-                // when keycode QMKBEST is released
-                midi_send_cc(&midi_device, 1, 0, 0);
-            }
-            break;
         case MI_CH1_Click:
             if (record->event.pressed) {
                 // when keycode QMKURL is pressed
@@ -83,15 +107,121 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 midi_send_cc(&midi_device, 1, 3, 0);
             }
             break;
+        case MI_CH4_Click:
+            if (record->event.pressed) {
+                // when keycode QMKBEST is pressed
+                midi_send_cc(&midi_device, 1, 4, 127);
+            } else {
+                // when keycode QMKBEST is released
+                midi_send_cc(&midi_device, 1, 4, 0);
+            }
+            break;
+        case MI_CH5_Click:
+            if (record->event.pressed) {
+                // when keycode QMKURL is pressed
+                midi_send_cc(&midi_device, 1, 5, 127);
+            } else {
+                // when keycode QMKURL is released
+                midi_send_cc(&midi_device, 1, 5, 0);
+            }
+            break;
+        case MI_CH6_Click:
+            if (record->event.pressed) {
+                // when keycode QMKURL is pressed
+                midi_send_cc(&midi_device, 1, 6, 127);
+            } else {
+                // when keycode QMKURL is released
+                midi_send_cc(&midi_device, 1, 6, 0);
+            }
+            break;
+        case MI_CH7_Click:
+            if (record->event.pressed) {
+                // when keycode QMKURL is pressed
+                midi_send_cc(&midi_device, 1, 7, 127);
+            } else {
+                // when keycode QMKURL is released
+                midi_send_cc(&midi_device, 1, 7, 0);
+            }
+            break;
+        case MI_CH8_Click:
+            if (record->event.pressed) {
+                // when keycode QMKBEST is pressed
+                midi_send_cc(&midi_device, 1, 8, 127);
+            } else {
+                // when keycode QMKBEST is released
+                midi_send_cc(&midi_device, 1, 8, 0);
+            }
+            break;
+        case MI_CH9_Click:
+            if (record->event.pressed) {
+                // when keycode QMKURL is pressed
+                midi_send_cc(&midi_device, 1, 9, 127);
+            } else {
+                // when keycode QMKURL is released
+                midi_send_cc(&midi_device, 1, 9, 0);
+            }
+            break;
+        case MI_CH10_Click:
+            if (record->event.pressed) {
+                // when keycode QMKURL is pressed
+                midi_send_cc(&midi_device, 1, 10, 127);
+            } else {
+                // when keycode QMKURL is released
+                midi_send_cc(&midi_device, 1, 10, 0);
+            }
+            break;
+        case MI_CH11_Click:
+            if (record->event.pressed) {
+                // when keycode QMKURL is pressed
+                midi_send_cc(&midi_device, 1, 11, 127);
+            } else {
+                // when keycode QMKURL is released
+                midi_send_cc(&midi_device, 1, 11, 0);
+            }
+            break;
+        case MI_CH12_Click:
+            if (record->event.pressed) {
+                // when keycode QMKURL is pressed
+                midi_send_cc(&midi_device, 1, 12, 127);
+            } else {
+                // when keycode QMKURL is released
+                midi_send_cc(&midi_device, 1, 12, 0);
+            }
+            break;
+
+        
     }
     return true;
 }
 
-const int encoderKeys[8] = {
-    KC_KP_1,MI_Cs_3,\
-    MI_D_4,MI_D_3,\
-    MI_Ds_4,MI_Ds_3,\
-    MI_E_4,MI_E_3\
+const int encoderKeysL2[24] = {
+    KC_A,KC_B,\
+    KC_C,KC_D,\
+    KC_E,KC_F,\
+    KC_G,KC_H,\
+    KC_I,KC_J,\
+    KC_K,KC_L,\
+    KC_M,KC_N,\
+    KC_O,KC_P,\
+    KC_Q,KC_R,\
+    KC_S,KC_T,\
+    KC_U,KC_V,\
+    KC_W,KC_X\
+    };
+
+const int encoderKeysL1[24] = {
+    KC_MS_WH_DOWN,KC_MS_WH_UP,\
+    KC_LEFT,KC_RIGHT,\
+    KC_UP,KC_DOWN,\
+    KC_G,KC_H,\
+    KC_I,KC_J,\
+    KC_K,KC_L,\
+    KC_M,KC_N,\
+    KC_O,KC_P,\
+    KC_Q,KC_R,\
+    KC_S,KC_T,\
+    KC__VOLDOWN,KC__VOLUP,\
+    KC_W,KC_X\
     };
 
 //void encoder_update_user(uint8_t index, bool clockwise) {
@@ -99,34 +229,75 @@ const int encoderKeys[8] = {
 //}
 
 
+// void encoder_update_user(uint8_t index, bool clockwise) {
+//     if (clockwise) {
+//       midi_send_cc(&midi_device, 1, index+1, 1);
+//     } else {
+//       midi_send_cc(&midi_device, 1, index+1, 65);
+//     }
+//   wait_ms(10);
+// }
+
 void encoder_update_user(uint8_t index, bool clockwise) {
-  if (index == 0) { /* First encoder */
-    if (clockwise) {
-      midi_send_cc(&midi_device, 1, 0, 1);
-    } else {
-      midi_send_cc(&midi_device, 1, 0, 65);
+// left encoder
+    
+    switch(biton32(layer_state)){
+        case 2:
+            if (clockwise) {
+            tap_code(encoderKeysL2[(index*2)+1]);
+            } else {
+            tap_code(encoderKeysL2[(index*2)]);
+            }
+            break;
+        case 1:
+            if (clockwise) {
+            tap_code(encoderKeysL1[(index*2)+1]);
+            } else {
+            tap_code(encoderKeysL1[(index*2)]);
+            }
+            break;
+        default:
+                if (clockwise) {
+                midi_send_cc(&midi_device, 1, index+1, 1);
+                } else {
+                midi_send_cc(&midi_device, 1, index+1, 65);
+                }
+            //wait_ms(10);
+            break;
+    
     }
-  } else if (index == 1) { /* Second encoder */  
-    if (clockwise) {
-      midi_send_cc(&midi_device, 1, 1, 1);
-    } else {
-      midi_send_cc(&midi_device, 1, 1, 65);
-    }
-      } else if (index == 2) { /* Second encoder */  
-    if (clockwise) {
-      midi_send_cc(&midi_device, 1, 2, 1);
-    } else {
-      midi_send_cc(&midi_device, 1, 2, 65);
-    }
-    } else if (index == 3) { /* Second encoder */  
-    if (clockwise) {
-      midi_send_cc(&midi_device, 1, 3, 1);
-    } else {
-      midi_send_cc(&midi_device, 1, 3, 65);
-    }
-  }
-  wait_ms(10);
 }
+
+
+
+// void encoder_update_user(uint8_t index, bool clockwise) {
+//   if (index == 0) { /* First encoder */
+//     if (clockwise) {
+//       midi_send_cc(&midi_device, 1, 0, 1);
+//     } else {
+//       midi_send_cc(&midi_device, 1, 0, 65);
+//     }
+//   } else if (index == 1) { /* Second encoder */  
+//     if (clockwise) {
+//       midi_send_cc(&midi_device, 1, 1, 1);
+//     } else {
+//       midi_send_cc(&midi_device, 1, 1, 65);
+//     }
+//       } else if (index == 2) { /* Second encoder */  
+//     if (clockwise) {
+//       midi_send_cc(&midi_device, 1, 2, 1);
+//     } else {
+//       midi_send_cc(&midi_device, 1, 2, 65);
+//     }
+//     } else if (index == 3) { /* Second encoder */  
+//     if (clockwise) {
+//       midi_send_cc(&midi_device, 1, 3, 1);
+//     } else {
+//       midi_send_cc(&midi_device, 1, 3, 65);
+//     }
+//   }
+//   wait_ms(10);
+// }
 
 /*
 void matrix_init_user(void) {

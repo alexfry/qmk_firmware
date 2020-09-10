@@ -1,7 +1,7 @@
 # MCU name
 
 # MCU = STM32F303
-MCU = atmega32u4
+MCU = at90usb1286
 
 # Bootloader selection
 #   Teensy       halfkay
@@ -11,7 +11,7 @@ MCU = atmega32u4
 #   QMK DFU      qmk-dfu
 #   ATmega32A    bootloadHID
 #   ATmega328P   USBasp
-BOOTLOADER = dfu
+BOOTLOADER = halfkay
 
 ## Features
 CONSOLE_ENABLE = yes
