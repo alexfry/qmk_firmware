@@ -5,10 +5,10 @@
 A short description of the keyboard/project
 
 * Keyboard Maintainer: [Alex Fry](https://github.com/alexfry/)
-* Hardware Supported: FnCoder84 version 0.1.2
+* Hardware Supported: FnCoder84 version 0.2.4
 * Hardware Availability: https://alexfry.com/fncoder
 
-This represents the final Teensy++2.0 versions
+First version for integrated MCU version.
 
 Make example for this keyboard (after setting up your build environment):
 
