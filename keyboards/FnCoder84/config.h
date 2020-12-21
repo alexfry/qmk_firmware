@@ -46,8 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define ENCODERS_PAD_B { A2, A0, B13, B15}
 
 // promico pins
-#define ENCODERS_PAD_A { B6, B2, B0, E6, D6, E1, C3, C6, A4, A7, A2}
-#define ENCODERS_PAD_B { B5, B1, E7, B7, D7, C0, C4, C7, A5, F4, A1}
+#define ENCODERS_PAD_A { A3, A1, F3, E3, B6, E5, D3, D5, A4, A7, C5, C0}
+#define ENCODERS_PAD_B { A2, A0, F2, B0, B7, D1, D4, D6, A5, C7, C7, C1}
 
 //#define ENCODERS_PAD_C { B0, B1, B2, B3 }
 
@@ -60,8 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define UNUSED_PINS
 
 // promicoc pins
-#define MATRIX_ROW_PINS { D3, D5, D4, D2, C1, B4}
-#define MATRIX_COL_PINS { F3, B3, F2, D0, D1, E0, C2, C5, F5, A6, A3, A0, F1, F7, F6}
+#define MATRIX_ROW_PINS { B3, B5, B4, B2, E7, F1}
+#define MATRIX_COL_PINS { F4, F7, F5, E6, B1, E4, D2, F6, D7, A6, C6, E1, C2, C3, C4}
 #define UNUSED_PINS
 
 /* COL2ROW, ROW2COL*/
