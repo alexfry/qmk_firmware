@@ -1,6 +1,6 @@
 {
     "manufacturer": "Alex Fry",
-    "keyboard_name": "FnCoder84",
+    "keyboard_name": "fncoder77",
     "maintainer": "Alex Fry",
     "bootloader": "atmel-dfu",
     "diode_direction": "COL2ROW",
@@ -8,33 +8,23 @@
         "bootmagic": true,
         "command": false,
         "console": false,
-        "extrakey": false,
-        "mousekey": false,
-        "nkro": true,
-        "serial": false,
-        "sleep_led": false,
-        "audio": false,
-        "rgblight": true,
-        "encoder": true,
-        "midi": true,
-        "backlight": true,
-        "raw": true,
-
-
+        "extrakey": true,
+        "mousekey": true,
+        "nkro": true
     },
     "matrix_pins": {
-        "cols": ["F7", "F5", "E6", "B1", "E4", "D2", "F6", "D7", "A6", "C6", "E1", "C2"],
-        "rows": ["B3", "E7", "B5", "B4", "B2", "F1", "F4"]
+        "cols": ["C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2"],
+        "rows": ["D1", "D1", "D1", "D1", "D1", "D1"]
     },
     "processor": "at90usb1286",
-    "url": "http://www.alexfry.com",
+    "url": "",
     "usb": {
-        "device_version": "0.3.3",
+        "device_version": "1.0.0",
         "pid": "0x0000",
         "vid": "0xFEED"
     },
     "layouts": {
-        "LAYOUT": {
+        "LAYOUT_75_ansi": {
             "layout": [
                 { "matrix": [0, 0], "x": 0, "y": 0 },
                 { "matrix": [0, 1], "x": 1, "y": 0 },

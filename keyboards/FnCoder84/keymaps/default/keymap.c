@@ -66,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
     KEYMAP(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC__MUTE, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MUTE, KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
@@ -74,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
     
     KEYMAP(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC__MUTE, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MUTE, KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
@@ -84,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KEYMAP(
 		KC_TRNS, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, TG(1), TG(2), 
 		KC_TRNS, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW, RGB_M_SN, RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, RGB_M_TW, KC_TRNS, KC_TRNS, KC_TRNS, MO(4), 
-		KC_TRNS, RGB_SETD65, RGB_MAXSAT, KC_TRNS, RESET, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, RGB_SETD65, RGB_MAXSAT, KC_TRNS, QK_BOOT, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
 		KC_TRNS, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, RGB_SPI, RGB_SPD, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, BL_DEC, BL_INC, BL_TOGG, BL_STEP, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PGUP, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_HOME, KC_PGDN, KC_END),
@@ -99,6 +99,96 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+
+const int encoderKeysL2[24] = {
+    KC_A,KC_Q,\
+    KC_S,KC_W,\
+    KC_D,KC_E,\
+    KC_F,KC_R,\
+    KC_G,KC_T,\
+    KC_H,KC_Y,\
+    KC_J,KC_U,\
+    KC_K,KC_I,\
+    KC_L,KC_O,\
+    KC_SCLN,KC_P,\
+    KC_QUOT,KC_LBRC,\
+    KC_BSLS,KC_RBRC\
+    };
+
+const int encoderKeysL1[24] = {
+    KC_MS_WH_DOWN,KC_MS_WH_UP,\
+    KC_LEFT,KC_RIGHT,\
+    KC_UP,KC_DOWN,\
+    RGB_HUI,RGB_HUD,\
+    RGB_SAD,RGB_SAI,\
+    RGB_VAD,RGB_VAI,\
+    KC_M,KC_N,\
+    KC_O,KC_P,\
+    KC_Q,KC_R,\
+    BL_DEC,BL_INC,\
+    BL_DEC,BL_INC,\
+    KC_VOLD,KC_VOLU\
+    };
+
+int midiVals[12] = {
+    64,\
+    64,\
+    64,\
+    64,\
+    64,\
+    64,\
+    64,\
+    64,\
+    64,\
+    64,\
+    64,\
+    64\
+    };
+
+int encoderhues[12] = {
+    237,\
+    237,\
+    237,\
+    237,\
+    237,\
+    237,\
+    237,\
+    237,\
+    237,\
+    237,\
+    237,\
+    237\
+    };
+
+int encodersats[12] = {
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255\
+    };
+
+int encodervals[12] = {
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255,\
+    255\
+    };
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -214,7 +304,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case RGB_MAXSAT:
             if (record->event.pressed) {
                 // Do something when pressed
-                rgblight_sethsv_noeeprom(237,255,255);
+                int h = 237;
+                int s = 255;
+                int v = 255;
+                rgblight_sethsv_noeeprom(h,s,v);
+                int i;
+                for (i = 0; i < RGBLED_NUM; ++i)
+                {
+                    encoderhues[i] = h;
+                    encodersats[i] = s;
+                    encodervals[i] = v;
+                } 
             } else {
                 // Do something else when release
             }
@@ -223,7 +323,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case RGB_SETD65:
             if (record->event.pressed) {
                 // Do something when pressed
-                rgblight_sethsv_noeeprom(27,67,100);
+                int h = 27;
+                int s = 67;
+                int v = 100;
+                rgblight_sethsv_noeeprom(h,s,v);
+                int i;
+                for (i = 0; i < RGBLED_NUM; ++i)
+                {
+                    encoderhues[i] = h;
+                    encodersats[i] = s;
+                    encodervals[i] = v;
+                } 
             } else {
                 // Do something else when release
             }
@@ -235,95 +345,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-const int encoderKeysL2[24] = {
-    KC_A,KC_Q,\
-    KC_S,KC_W,\
-    KC_D,KC_E,\
-    KC_F,KC_R,\
-    KC_G,KC_T,\
-    KC_H,KC_Y,\
-    KC_J,KC_U,\
-    KC_K,KC_I,\
-    KC_L,KC_O,\
-    KC_SCLN,KC_P,\
-    KC_QUOT,KC_LBRC,\
-    KC_BSLS,KC_RBRC\
-    };
+// void d65_to_hsv(int input) {
+//     int lowVals[3] = {21,61,34};
+//     int midVals[3] = {21,67,100};
+//     int highVals[3] {21,160,255}; 
+// }
 
-const int encoderKeysL1[24] = {
-    KC_MS_WH_DOWN,KC_MS_WH_UP,\
-    KC_LEFT,KC_RIGHT,\
-    KC_UP,KC_DOWN,\
-    RGB_HUI,RGB_HUD,\
-    RGB_SAD,RGB_SAI,\
-    RGB_VAD,RGB_VAI,\
-    KC_M,KC_N,\
-    KC_O,KC_P,\
-    KC_Q,KC_R,\
-    BL_DEC,BL_INC,\
-    BL_DEC,BL_INC,\
-    KC__VOLDOWN,KC__VOLUP\
-    };
 
-int midiVals[12] = {
-    64,\
-    64,\
-    64,\
-    64,\
-    64,\
-    64,\
-    64,\
-    64,\
-    64,\
-    64,\
-    64,\
-    64\
-    };
-
-int encoderhues[12] = {
-    237,\
-    237,\
-    237,\
-    237,\
-    237,\
-    237,\
-    237,\
-    237,\
-    237,\
-    237,\
-    237,\
-    237\
-    };
-
-int encodersats[12] = {
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255\
-    };
-
-int encodervals[12] = {
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255,\
-    255\
-    };
 
 //void encoder_update_user(uint8_t index, bool clockwise) {
 //  tap_code(encoderKeys[(index * 2) + clockwise]);
@@ -357,18 +385,26 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     switch(biton32(layer_state)){
         case 3:
             if (clockwise) {
-                if (get_mods() & MOD_BIT(KC_LSFT) || get_mods() & MOD_BIT(KC_RSFT)){
-                    encodersats[index] = encodersats[index] + 4;
+
+                if (get_mods() & MOD_MASK_SHIFT){
+                    encodersats[index] = encodersats[index] + 16;
                     if (encodersats[index] > 255){
                         encodersats[index] = 255;
                     }
                     rgblight_sethsv_at(encoderhues[index], encodersats[index], encodervals[index], index);
-                } else if (get_mods() & MOD_BIT(KC_LGUI) || get_mods() & MOD_BIT(KC_RGUI)){
+                } else if (get_mods() & MOD_MASK_GUI){
                     encodervals[index] += 16;
                     if (encodervals[index] >= 255){
                         encodervals[index] = 255;
                     }
                     rgblight_sethsv_at(encoderhues[index], encodersats[index], encodervals[index], index);
+                } else if (get_mods() & MOD_MASK_CTRL ){
+                    int i;
+                    for (i = 0; i < RGBLED_NUM; ++i)
+                    {
+                    encoderhues[i] += 4;
+                    rgblight_sethsv_at(encoderhues[i], encodersats[i], encodervals[i], i);
+                    }
                 } else {
                     encoderhues[index] += 4;
                     
@@ -379,19 +415,25 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                     rgblight_sethsv_at(encoderhues[index], encodersats[index], encodervals[index], index);
                 }
             } else {
-
-                if (get_mods() & MOD_BIT(KC_LSFT) || get_mods() & MOD_BIT(KC_RSFT)){
-                    encodersats[index] = encodersats[index] - 4;
+                if (get_mods() & MOD_MASK_SHIFT){
+                    encodersats[index] = encodersats[index] - 16;
                     if (encodersats[index] < 0){
                         encodersats[index] = 0;
                     }
                     rgblight_sethsv_at(encoderhues[index], encodersats[index], encodervals[index], index);
-                } else if (get_mods() & MOD_BIT(KC_LGUI) || get_mods() & MOD_BIT(KC_RGUI)){
+                } else if (get_mods() & MOD_MASK_GUI){
                     encodervals[index] = encodervals[index] - 16;
                     if (encodervals[index] < 0){
                         encodervals[index] = 0;
                     }
                     rgblight_sethsv_at(encoderhues[index], encodersats[index], encodervals[index], index);
+                } else if (get_mods() & MOD_MASK_CTRL ){
+                    int i;
+                    for (i = 0; i < RGBLED_NUM; ++i)
+                    {
+                    encoderhues[i] -= 4;
+                    rgblight_sethsv_at(encoderhues[i], encodersats[i], encodervals[i], i);
+                    }
                 } else {
                     encoderhues[index] -= 4;
                     // if (encoderhues[index] < 0){
@@ -619,6 +661,27 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
                             break;
                     }
                     break;
+            }
+        }
+        case 5: {
+            // TODO: set only the specific LED(s) flag
+            // rgb_matrix_set_flags(LED_FLAG_NONE);
+            uint8_t index = data[2];
+            uint8_t h     = data[3];
+            uint8_t s     = data[4];
+            uint8_t v     = data[5];
+            switch (data[1]) {
+                // Set one led to color
+                case 1:
+                    // rgb_matrix_set_color(index, r, g, b);
+                    // rgblight_setrgb_at(r, g, b, index);
+
+                    rgblight_sethsv_at(h,s,v, index);
+                    encoderhues[index] = h;
+                    encodersats[index] = s;
+                    encodervals[index] = v;
+                    break;
+                // Set one row to color
             }
         }
     }

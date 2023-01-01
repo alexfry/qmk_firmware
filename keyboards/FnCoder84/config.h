@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config_common.h"
 
 /* USB Device descriptor parameter */
-#define VENDOR_ID 0xFEED
-#define PRODUCT_ID 0x0001
-#define DEVICE_VER 0x0001
-#define MANUFACTURER Alex Fry
-#define PRODUCT FnCoder84
-#define DESCRIPTION A custom keyboard
+// #define VENDOR_ID 0xFEED
+// #define PRODUCT_ID 0x0001
+// #define DEVICE_VER 0x0001
+// #define MANUFACTURER Alex Fry
+// #define PRODUCT fncoder84
+// #define DESCRIPTION A custom keyboard
 
 /* key matrix size */
 #define MATRIX_ROWS 7
@@ -60,13 +60,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MATRIX_COL_PINS { A9, A10, B7, B6}
 // #define UNUSED_PINS
 
-// promicoc pins
-#define MATRIX_ROW_PINS { B3, E7, B5, B4, B2, F1, F4}
-#define MATRIX_COL_PINS { F7, F5, E6, B1, E4, D2, F6, D7, A6, C6, E1, C2}
-#define UNUSED_PINS
+// // promicoc pins
+// #define MATRIX_ROW_PINS { B3, E7, B5, B4, B2, F1, F4}
+// #define MATRIX_COL_PINS { F7, F5, E6, B1, E4, D2, F6, D7, A6, C6, E1, C2}
+// // #define UNUSED_PINS
 
 /* COL2ROW, ROW2COL*/
-#define DIODE_DIRECTION COL2ROW
+// #define DIODE_DIRECTION COL2ROW
 
 /*
  * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.
@@ -219,10 +219,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_ONESHOT
 
 /* disable these deprecated features by default */
-#ifndef LINK_TIME_OPTIMIZATION_ENABLE
-  #define NO_ACTION_MACRO
-  #define NO_ACTION_FUNCTION
-#endif
+// #ifndef LINK_TIME_OPTIMIZATION_ENABLE
+//   #define NO_ACTION_MACRO
+//   #define NO_ACTION_FUNCTION
+// #endif
 /*
  * MIDI options
  */
