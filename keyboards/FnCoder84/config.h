@@ -81,9 +81,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BACKLIGHT_LEVELS 3
 
 
+
+
+
+
 #define RGB_DI_PIN F0
 #ifdef RGB_DI_PIN
   #define RGBLED_NUM 12
+  #define RGB_MATRIX_LED_COUNT 70
   #define RGBLIGHT_DEFAULT_HUE 27 /* was 33*/
   #define RGBLIGHT_DEFAULT_SAT 67 /* was 47*/
   #define RGBLIGHT_HUE_STEP 8
@@ -111,6 +116,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   #define RGBLIGHT_EFFECT_BREATHE_CENTER 1.85  // 1 to 2.7
   #define RGBLIGHT_EFFECT_BREATHE_MAX    255   // 0 to 255
 #endif
+
+// #if  defined(JOYSTICK_ENABLE)
+// Min 0, max 32
+// Min 0, max 32
+#define JOYSTICK_BUTTON_COUNT 32
+// Min 0, max 6: X, Y, Z, Rx, Ry, Rz
+#define JOYSTICK_AXIS_COUNT 0
+// Min 8, max 16
+#define JOYSTICK_AXIS_RESOLUTION 10
+// #endif
 
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 5

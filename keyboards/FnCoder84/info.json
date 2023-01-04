@@ -8,20 +8,26 @@
         "bootmagic": true,
         "command": false,
         "console": false,
-        "extrakey": false,
+        "extrakey": true,
         "mousekey": false,
         "nkro": true,
         "serial": false,
         "sleep_led": false,
         "audio": false,
         "rgblight": true,
+        "rgblight_startup_animation": true,
         "encoder": true,
         "midi": true,
+        "joystick": false,
         "backlight": true,
         "raw": true,
+        // "rgb_matrix": true,
+        // "rgb_matrix_driver": "WS2812",
 
 
     },
+    "joystick_driver": "analog",
+
     "matrix_pins": {
         "cols": ["F7", "F5", "E6", "B1", "E4", "D2", "F6", "D7", "A6", "C6", "E1", "C2"],
         "rows": ["B3", "E7", "B5", "B4", "B2", "F1", "F4"]
