@@ -4,6 +4,9 @@ Used by a **desktop app** to show software state on the keyboard LEDs
 (e.g. status of tools driven by the 12 encoders). This is functional
 feedback, not VIA aesthetic lighting config.
 
+> **Full bidirectional protocol** (LEDs `0xFE` + stream control `0xFC` + encoder events `0xFD`):  
+> see **[HOST_RAW_HID_PROTOCOL.md](HOST_RAW_HID_PROTOCOL.md)**.
+
 Transport: **USB Raw HID**, 32-byte reports (QMK default).
 
 USB IDs (current): **VID `0xAF84` / PID `0x0084`** (VIA rejects the old QMK placeholder `0xFEED`).

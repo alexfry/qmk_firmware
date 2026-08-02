@@ -13,31 +13,28 @@
 #include "qmk_midi.h"
 
 /*
- * Host → keyboard LED status protocol (desktop app feedback for encoder-driven software).
+ * FnCoder Raw HID (32-byte reports). Full doc: HOST_RAW_HID_PROTOCOL.md
  *
- * This is NOT aesthetic config — it mirrors app state onto the encoder LEDs.
+ *   0xFE  Host → KB   LED / status commands (existing)
+ *   0xFC  Host → KB   Stream control (STREAM / PING)
+ *   0xFD  KB → Host   Encoder events (TURN / BUTTON / PONG)
  *
- * Packet formats (32-byte Raw HID):
- *
- *   Prefixed (works with BOTH default and VIA builds — preferred):
- *     data[0] = 0xFE              // FNCODER_HOST_CMD, avoids VIA command IDs
- *     data[1] = command           // same as legacy command below
- *     data[2...] = payload
- *
- *   Legacy unprefixed (default / non-VIA builds only — IDs collide with VIA):
- *     data[0] = command
- *     data[1...] = payload
- *
- * Commands:
- *   1 / sub 2: rgblight_step_noeeprom
- *   1 / sub 3: solid white
- *   1 / sub 4: disable
- *   1 / sub 5: enable
- *   4 / sub 1: set LED data[2] to RGB data[3..5]
- *   4 / sub 2: set LED range group data[2] to RGB data[3..5]
- *              (groups 1-9; only indices < RGBLIGHT_LED_COUNT actually light)
+ * Avoids VIA command IDs (0x01–0x15). Encoder events dual-emit with MIDI.
  */
-#define FNCODER_HOST_CMD 0xFE
+#define FNCODER_HOST_CMD  0xFE /* host → keyboard: LED */
+#define FNCODER_CTRL_CMD  0xFC /* host → keyboard: stream / ping */
+#define FNCODER_EVT_CMD   0xFD /* keyboard → host: events */
+
+#define FNCODER_CTRL_STREAM 0x01
+#define FNCODER_CTRL_PING   0x02
+
+#define FNCODER_EVT_TURN   0x01
+#define FNCODER_EVT_BUTTON 0x02
+#define FNCODER_EVT_PONG   0x7F
+
+#ifndef RAW_EPSIZE
+#    define RAW_EPSIZE 32
+#endif
 
 /*
  * Warm white for encoder status LEDs — original post-boot settle (506c716).
@@ -215,9 +212,42 @@ static void midi_click(uint8_t cc, bool pressed) {
     midi_send_cc(&midi_device, 1, cc, pressed ? 127 : 0);
 }
 
+#ifdef RAW_ENABLE
+/* Experiment default: stream on so PCoIP apps see events without a setup handshake. */
+static bool    fncoder_hid_stream_enabled = true;
+static uint8_t fncoder_evt_seq            = 0;
+
+static void fncoder_raw_send_event(uint8_t msg_type, uint8_t index, uint8_t payload) {
+    if (!fncoder_hid_stream_enabled && msg_type != FNCODER_EVT_PONG) {
+        return;
+    }
+    uint8_t data[RAW_EPSIZE] = {0};
+    data[0]                  = FNCODER_EVT_CMD;
+    data[1]                  = msg_type;
+    data[2]                  = index;
+    data[3]                  = payload;
+    data[4]                  = fncoder_evt_seq++;
+    raw_hid_send(data, RAW_EPSIZE);
+}
+
+static void fncoder_raw_send_turn(uint8_t index, bool clockwise) {
+    /* Relative continuous: +1 CW, -1 CCW (int8). */
+    int8_t delta = clockwise ? (int8_t)1 : (int8_t)-1;
+    fncoder_raw_send_event(FNCODER_EVT_TURN, index, (uint8_t)delta);
+}
+
+static void fncoder_raw_send_button(uint8_t index, bool pressed) {
+    fncoder_raw_send_event(FNCODER_EVT_BUTTON, index, pressed ? 1 : 0);
+}
+#endif /* RAW_ENABLE */
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (keycode >= MI_CH1_Click && keycode <= MI_CH12_Click) {
-        midi_click((uint8_t)(keycode - MI_CH1_Click + 1), record->event.pressed);
+        uint8_t idx = (uint8_t)(keycode - MI_CH1_Click);
+        midi_click(idx + 1, record->event.pressed);
+#ifdef RAW_ENABLE
+        fncoder_raw_send_button(idx, record->event.pressed);
+#endif
         return false;
     }
     if (keycode >= MI_ENC_REL_FIRST && keycode <= MI_ENC_REL_LAST) {
@@ -226,6 +256,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             bool    cw  = ((keycode - MI_ENC_REL_FIRST) % 2) != 0;
             /* Relative MIDI CC (channel 1, controller idx+1). */
             midi_send_cc(&midi_device, 1, idx + 1, cw ? 63 : 65);
+#ifdef RAW_ENABLE
+            fncoder_raw_send_turn(idx, cw);
+#endif
         }
         return false;
     }
@@ -240,6 +273,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             /* Full sat/val so the chosen hue is obvious on that encoder LED. */
             rgblight_sethsv_at(encoderhues[idx], 255, 255, idx);
+#ifdef RAW_ENABLE
+            /* Still report relative turn to host while colour-tweaking. */
+            fncoder_raw_send_turn(idx, cw);
+#endif
         }
         return false;
     }
@@ -333,6 +370,10 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         return false;
     }
 
+#ifdef RAW_ENABLE
+    fncoder_raw_send_turn(index, clockwise);
+#endif
+
     switch (get_highest_layer(layer_state)) {
         case _FN3:
             if (clockwise) {
@@ -378,7 +419,7 @@ static void set_led_range(int start, int stop, uint8_t r, uint8_t g, uint8_t b) 
     }
 }
 
-/* command + payload: command at [0], same layout as the legacy unprefixed packets. */
+/* LED command body: command at [0] (legacy unprefixed layout after stripping 0xFE). */
 static void fncoder_handle_led_command(const uint8_t *cmd, uint8_t length) {
     if (length < 2) {
         return;
@@ -456,30 +497,74 @@ static void fncoder_handle_led_command(const uint8_t *cmd, uint8_t length) {
     }
 }
 
+/* Host → keyboard 0xFC stream control / ping. */
+static void fncoder_handle_ctrl_command(const uint8_t *cmd, uint8_t length) {
+    if (length < 1) {
+        return;
+    }
+    switch (cmd[0]) {
+        case FNCODER_CTRL_STREAM:
+            if (length >= 2) {
+                fncoder_hid_stream_enabled = (cmd[1] != 0);
+            }
+            break;
+        case FNCODER_CTRL_PING: {
+            uint8_t cookie = (length >= 2) ? cmd[1] : 0;
+            /* PONG always sent (even if stream is off) so path checks work. */
+            uint8_t data[RAW_EPSIZE] = {0};
+            data[0]                  = FNCODER_EVT_CMD;
+            data[1]                  = FNCODER_EVT_PONG;
+            data[2]                  = 0;
+            data[3]                  = cookie;
+            data[4]                  = fncoder_evt_seq++;
+            raw_hid_send(data, RAW_EPSIZE);
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+/* Full host packet: demux by first byte (0xFE LEDs, 0xFC control). */
+static void fncoder_handle_host_packet(const uint8_t *data, uint8_t length) {
+    if (length < 1) {
+        return;
+    }
+    switch (data[0]) {
+        case FNCODER_HOST_CMD:
+            if (length > 1) {
+                fncoder_handle_led_command(&data[1], length - 1);
+            }
+            break;
+        case FNCODER_CTRL_CMD:
+            if (length > 1) {
+                fncoder_handle_ctrl_command(&data[1], length - 1);
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 #    ifdef VIA_ENABLE
 /*
- * VIA owns raw_hid_receive. Claim only our host-status packets (0xFE)
- * and leave all real VIA command IDs alone.
+ * VIA owns raw_hid_receive. Claim FnCoder packets (0xFE / 0xFC) only.
  */
 bool via_command_kb(uint8_t *data, uint8_t length) {
-    if (data[0] != FNCODER_HOST_CMD) {
+    if (data[0] != FNCODER_HOST_CMD && data[0] != FNCODER_CTRL_CMD) {
         return false;
     }
-    if (length > 1) {
-        fncoder_handle_led_command(&data[1], length - 1);
-    }
-    /* No reply required; returning true means we fully handled the packet. */
+    fncoder_handle_host_packet(data, length);
+    /* Returning true = fully handled (PING already sent its own 0xFD PONG). */
     return true;
 }
 #    else
 void raw_hid_receive(uint8_t *data, uint8_t length) {
-    if (data[0] == FNCODER_HOST_CMD) {
-        if (length > 1) {
-            fncoder_handle_led_command(&data[1], length - 1);
-        }
+    if (data[0] == FNCODER_HOST_CMD || data[0] == FNCODER_CTRL_CMD) {
+        fncoder_handle_host_packet(data, length);
         return;
     }
-    /* Legacy desktop app: unprefixed commands (not safe under VIA). */
+    /* Legacy desktop app: unprefixed LED commands (not safe under VIA). */
     fncoder_handle_led_command(data, length);
 }
 #    endif

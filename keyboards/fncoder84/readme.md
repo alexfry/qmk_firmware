@@ -42,6 +42,15 @@ dfu-programmer at90usb1286 reset
 
 Definition: `via.json` · details: [docs/UPDATE-AND-VIA.md](docs/UPDATE-AND-VIA.md)
 
+### Raw HID events (PCoIP-friendly)
+
+Relative turns and pushes also go out as Raw HID IN reports (`0xFD`) so a host app can control software when USB MIDI forwarding fails (e.g. some PCoIP setups). LEDs stay on `0xFE`. See [HOST_RAW_HID_PROTOCOL.md](HOST_RAW_HID_PROTOCOL.md).
+
+```bash
+python3 -m pip uninstall -y hid hidapi && python3 -m pip install --user hidapi
+python3 keyboards/fncoder84/tools/raw_hid_encoder_monitor.py
+```
+
 ## Boot LEDs
 
 Orange chase across the 12 encoder LEDs, then settle at warm white **HSV 27/110/100**.
@@ -51,7 +60,9 @@ Orange chase across the 12 encoder LEDs, then settle at warm white **HSV 27/110/
 | Doc | Topic |
 |-----|--------|
 | [docs/UPDATE-AND-VIA.md](docs/UPDATE-AND-VIA.md) | Full write-up: QMK update, VIA, encoder map, EEPROM seed, flashing |
-| [HOST_LED_PROTOCOL.md](HOST_LED_PROTOCOL.md) | Desktop app Raw HID LED status protocol (`0xFE`) |
+| [HOST_RAW_HID_PROTOCOL.md](HOST_RAW_HID_PROTOCOL.md) | Bidirectional Raw HID: LEDs (`0xFE`), control (`0xFC`), encoder events (`0xFD`) |
+| [HOST_LED_PROTOCOL.md](HOST_LED_PROTOCOL.md) | LED-only subset (legacy pointer) |
+| [tools/raw_hid_encoder_monitor.py](tools/raw_hid_encoder_monitor.py) | PING + live TURN/BUTTON monitor (hidapi) |
 
 ## USB IDs
 

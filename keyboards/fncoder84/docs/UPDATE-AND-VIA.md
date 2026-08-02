@@ -184,9 +184,13 @@ VIA owns Raw HID for its protocol. Host status LEDs use a **non-colliding** comm
 
 VIA command IDs include `0x01` and `0x04`, which were the old unprefixed LED opcodes — those must not be used on VIA builds without the `0xFE` prefix.
 
-Full packet docs: [../HOST_LED_PROTOCOL.md](../HOST_LED_PROTOCOL.md).
+Full packet docs: [../HOST_RAW_HID_PROTOCOL.md](../HOST_RAW_HID_PROTOCOL.md) (LEDs `0xFE`, control `0xFC`, encoder events `0xFD`). LED-only subset: [../HOST_LED_PROTOCOL.md](../HOST_LED_PROTOCOL.md).
 
 VIA’s built-in RGBLight / backlight menus still work (`menus`: `qmk_backlight_rgblight`). Last writer wins on the same LEDs if the desktop app and VIA both drive RGB.
+
+### Encoder events over Raw HID (PCoIP)
+
+When USB MIDI is not forwarded correctly (e.g. some PCoIP setups), the keyboard dual-emits **relative** encoder turns and button edges as unsolicited Raw HID **IN** reports (`0xFD`). Host apps read that stream and still send status LEDs with `0xFE`. See the protocol doc and `tools/raw_hid_encoder_monitor.py`.
 
 ---
 
