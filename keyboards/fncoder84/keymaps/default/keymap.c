@@ -37,6 +37,21 @@
  */
 #define FNCODER_HOST_CMD 0xFE
 
+/*
+ * Warm white for encoder status LEDs — original post-boot settle (506c716).
+ * Hue 27 / sat 110 / val 100: warm amber-white at moderate brightness.
+ * (Earlier wrong settle of sat 67 / val 255 read as bright cool white.)
+ */
+#define FNCODER_LED_HUE 27
+#define FNCODER_LED_SAT 110
+#define FNCODER_LED_VAL 100
+
+/* Startup chase flash (original 506c716 animation): warm-orange pulse per LED */
+#define FNCODER_BOOT_FLASH_HUE 17
+#define FNCODER_BOOT_FLASH_SAT 180
+#define FNCODER_BOOT_FLASH_VAL 255
+#define FNCODER_BOOT_FLASH_MS  50
+
 enum layer_names {
     _BASE,
     _FN1,
@@ -44,6 +59,21 @@ enum layer_names {
     _FN3,
     _FN4
 };
+
+void keyboard_post_init_user(void) {
+    rgblight_enable_noeeprom();
+    rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+
+    /* Start dark, then chase one LED at a time (original boot anim). */
+    rgblight_sethsv_noeeprom(FNCODER_LED_HUE, FNCODER_LED_SAT, 0);
+    for (uint8_t i = 0; i < RGBLIGHT_LED_COUNT; i++) {
+        rgblight_sethsv_at(FNCODER_BOOT_FLASH_HUE, FNCODER_BOOT_FLASH_SAT, FNCODER_BOOT_FLASH_VAL, i);
+        wait_ms(FNCODER_BOOT_FLASH_MS);
+        rgblight_sethsv_at(FNCODER_LED_HUE, FNCODER_LED_SAT, 0, i);
+    }
+    /* Settle on original warm white (not full-bright cool white). */
+    rgblight_sethsv_noeeprom(FNCODER_LED_HUE, FNCODER_LED_SAT, FNCODER_LED_VAL);
+}
 
 enum custom_keycodes {
     MI_CH1_Click = SAFE_RANGE,

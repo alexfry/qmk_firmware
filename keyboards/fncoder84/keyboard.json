@@ -121,7 +121,8 @@
         "sleep": true,
         "default": {
             "hue": 27,
-            "sat": 67
+            "sat": 110,
+            "val": 100
         },
         "animations": {
             "breathing": true,
