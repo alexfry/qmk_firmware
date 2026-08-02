@@ -7,6 +7,8 @@
 #endif
 #ifdef VIA_ENABLE
 #    include "via.h"
+#    include "dynamic_keymap.h"
+#    include "keymap_introspection.h"
 #endif
 #include "qmk_midi.h"
 
@@ -60,7 +62,58 @@ enum layer_names {
     _FN4
 };
 
+/*
+ * VIA EEPROM may already be "valid" from before ENCODER_MAP existed, so
+ * rotation slots were never written (clicks still work; turns do nothing).
+ * Seed encoder_map → EEPROM once per firmware feature version.
+ */
+#if defined(ENCODER_MAP_ENABLE) && defined(VIA_ENABLE)
+#    define FNCODER_USER_MAGIC      0xA84E
+/* Bump when firmware encoder_map defaults change so EEPROM is reseeded. */
+#    define FNCODER_ENCODER_MAP_VER 2
+
+typedef union {
+    uint32_t raw;
+    struct {
+        uint16_t magic;
+        uint8_t  encoder_map_ver;
+        uint8_t  reserved;
+    };
+} fncoder_user_config_t;
+
+static void fncoder_seed_encoder_map(void) {
+    for (uint8_t layer = 0; layer < DYNAMIC_KEYMAP_LAYER_COUNT; layer++) {
+        for (uint8_t encoder = 0; encoder < NUM_ENCODERS; encoder++) {
+            dynamic_keymap_set_encoder(layer, encoder, true, keycode_at_encodermap_location_raw(layer, encoder, true));
+            dynamic_keymap_set_encoder(layer, encoder, false, keycode_at_encodermap_location_raw(layer, encoder, false));
+        }
+    }
+}
+
+static void fncoder_maybe_seed_encoder_map(void) {
+    fncoder_user_config_t cfg = {.raw = eeconfig_read_user()};
+    if (cfg.magic == FNCODER_USER_MAGIC && cfg.encoder_map_ver >= FNCODER_ENCODER_MAP_VER) {
+        return;
+    }
+    fncoder_seed_encoder_map();
+    cfg.magic           = FNCODER_USER_MAGIC;
+    cfg.encoder_map_ver = FNCODER_ENCODER_MAP_VER;
+    cfg.reserved        = 0;
+    eeconfig_update_user(cfg.raw);
+}
+
+void eeconfig_init_user(void) {
+    /* Full EEPROM wipe — post_init will reseed encoder map. */
+    eeconfig_update_user(0);
+}
+#endif /* ENCODER_MAP_ENABLE && VIA_ENABLE */
+
 void keyboard_post_init_user(void) {
+#if defined(ENCODER_MAP_ENABLE) && defined(VIA_ENABLE)
+    /* Before animation so first turns after boot already send MIDI. */
+    fncoder_maybe_seed_encoder_map();
+#endif
+
     rgblight_enable_noeeprom();
     rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
 
@@ -87,8 +140,29 @@ enum custom_keycodes {
     MI_CH9_Click,
     MI_CH10_Click,
     MI_CH11_Click,
-    MI_CH12_Click
+    MI_CH12_Click,
+    /*
+     * Relative MIDI CC encoder turns (VIA encoder_map defaults).
+     * 24 consecutive codes: for encoder i, CCW = FIRST+2*i, CW = FIRST+2*i+1.
+     * Sends CC (i+1) value 65 (CCW) / 63 (CW) — same as the old encoder_update_user base layer.
+     */
+    MI_ENC_REL_FIRST,
+    MI_ENC_REL_LAST = MI_ENC_REL_FIRST + 23,
+    /*
+     * Per-encoder status LED hue (old MO(3) + twist behaviour).
+     * Same packing: CCW/CW pairs for encoders 0–11 → rgblight_sethsv_at(hue, 255, 255, i).
+     */
+    MI_ENC_HUE_FIRST,
+    MI_ENC_HUE_LAST = MI_ENC_HUE_FIRST + 23
 };
+
+#define MI_E_CCW(i) ((uint16_t)(MI_ENC_REL_FIRST + (i) * 2))
+#define MI_E_CW(i)  ((uint16_t)(MI_ENC_REL_FIRST + (i) * 2 + 1))
+#define MI_H_CCW(i) ((uint16_t)(MI_ENC_HUE_FIRST + (i) * 2))
+#define MI_H_CW(i)  ((uint16_t)(MI_ENC_HUE_FIRST + (i) * 2 + 1))
+
+/* Per-encoder LED hue state (MO(3) twist / MI_ENC_HUE_*). */
+static uint8_t encoderhues[12] = {27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
@@ -142,46 +216,89 @@ static void midi_click(uint8_t cc, bool pressed) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case MI_CH1_Click:
-            midi_click(1, record->event.pressed);
-            return false;
-        case MI_CH2_Click:
-            midi_click(2, record->event.pressed);
-            return false;
-        case MI_CH3_Click:
-            midi_click(3, record->event.pressed);
-            return false;
-        case MI_CH4_Click:
-            midi_click(4, record->event.pressed);
-            return false;
-        case MI_CH5_Click:
-            midi_click(5, record->event.pressed);
-            return false;
-        case MI_CH6_Click:
-            midi_click(6, record->event.pressed);
-            return false;
-        case MI_CH7_Click:
-            midi_click(7, record->event.pressed);
-            return false;
-        case MI_CH8_Click:
-            midi_click(8, record->event.pressed);
-            return false;
-        case MI_CH9_Click:
-            midi_click(9, record->event.pressed);
-            return false;
-        case MI_CH10_Click:
-            midi_click(10, record->event.pressed);
-            return false;
-        case MI_CH11_Click:
-            midi_click(11, record->event.pressed);
-            return false;
-        case MI_CH12_Click:
-            midi_click(12, record->event.pressed);
-            return false;
+    if (keycode >= MI_CH1_Click && keycode <= MI_CH12_Click) {
+        midi_click((uint8_t)(keycode - MI_CH1_Click + 1), record->event.pressed);
+        return false;
+    }
+    if (keycode >= MI_ENC_REL_FIRST && keycode <= MI_ENC_REL_LAST) {
+        if (record->event.pressed) {
+            uint8_t idx = (uint8_t)((keycode - MI_ENC_REL_FIRST) / 2);
+            bool    cw  = ((keycode - MI_ENC_REL_FIRST) % 2) != 0;
+            /* Relative MIDI CC (channel 1, controller idx+1). */
+            midi_send_cc(&midi_device, 1, idx + 1, cw ? 63 : 65);
+        }
+        return false;
+    }
+    if (keycode >= MI_ENC_HUE_FIRST && keycode <= MI_ENC_HUE_LAST) {
+        if (record->event.pressed) {
+            uint8_t idx = (uint8_t)((keycode - MI_ENC_HUE_FIRST) / 2);
+            bool    cw  = ((keycode - MI_ENC_HUE_FIRST) % 2) != 0;
+            if (cw) {
+                encoderhues[idx] = (uint8_t)((encoderhues[idx] + 4) & 0xFF);
+            } else {
+                encoderhues[idx] = (uint8_t)((encoderhues[idx] - 4) & 0xFF);
+            }
+            /* Full sat/val so the chosen hue is obvious on that encoder LED. */
+            rgblight_sethsv_at(encoderhues[idx], 255, 255, idx);
+        }
+        return false;
     }
     return true;
 }
+
+#if defined(ENCODER_MAP_ENABLE)
+/*
+ * VIA-remappable encoder map (requires ENCODER_MAP_ENABLE in the via keymap).
+ * Base / FN1: relative MIDI CC per encoder (custom keycodes).
+ * FN2: legacy key pairs (scroll / arrows / letters / backlight / volume).
+ * FN3: per-encoder status LED hue (hold MO(3), twist that knob).
+ * FN4: transparent.
+ *
+ * Note: ENCODER_MAP replaces encoder_update_user entirely on via builds.
+ */
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
+    [_BASE] = {
+        ENCODER_CCW_CW(MI_E_CCW(0), MI_E_CW(0)),   ENCODER_CCW_CW(MI_E_CCW(1), MI_E_CW(1)),
+        ENCODER_CCW_CW(MI_E_CCW(2), MI_E_CW(2)),   ENCODER_CCW_CW(MI_E_CCW(3), MI_E_CW(3)),
+        ENCODER_CCW_CW(MI_E_CCW(4), MI_E_CW(4)),   ENCODER_CCW_CW(MI_E_CCW(5), MI_E_CW(5)),
+        ENCODER_CCW_CW(MI_E_CCW(6), MI_E_CW(6)),   ENCODER_CCW_CW(MI_E_CCW(7), MI_E_CW(7)),
+        ENCODER_CCW_CW(MI_E_CCW(8), MI_E_CW(8)),   ENCODER_CCW_CW(MI_E_CCW(9), MI_E_CW(9)),
+        ENCODER_CCW_CW(MI_E_CCW(10), MI_E_CW(10)), ENCODER_CCW_CW(MI_E_CCW(11), MI_E_CW(11)),
+    },
+    [_FN1] = {
+        ENCODER_CCW_CW(MI_E_CCW(0), MI_E_CW(0)),   ENCODER_CCW_CW(MI_E_CCW(1), MI_E_CW(1)),
+        ENCODER_CCW_CW(MI_E_CCW(2), MI_E_CW(2)),   ENCODER_CCW_CW(MI_E_CCW(3), MI_E_CW(3)),
+        ENCODER_CCW_CW(MI_E_CCW(4), MI_E_CW(4)),   ENCODER_CCW_CW(MI_E_CCW(5), MI_E_CW(5)),
+        ENCODER_CCW_CW(MI_E_CCW(6), MI_E_CW(6)),   ENCODER_CCW_CW(MI_E_CCW(7), MI_E_CW(7)),
+        ENCODER_CCW_CW(MI_E_CCW(8), MI_E_CW(8)),   ENCODER_CCW_CW(MI_E_CCW(9), MI_E_CW(9)),
+        ENCODER_CCW_CW(MI_E_CCW(10), MI_E_CW(10)), ENCODER_CCW_CW(MI_E_CCW(11), MI_E_CW(11)),
+    },
+    [_FN2] = {
+        ENCODER_CCW_CW(MS_WHLD, MS_WHLU), ENCODER_CCW_CW(KC_LEFT, KC_RGHT),
+        ENCODER_CCW_CW(KC_UP, KC_DOWN),   ENCODER_CCW_CW(KC_G, KC_H),
+        ENCODER_CCW_CW(KC_I, KC_J),       ENCODER_CCW_CW(KC_K, KC_L),
+        ENCODER_CCW_CW(KC_M, KC_N),       ENCODER_CCW_CW(KC_O, KC_P),
+        ENCODER_CCW_CW(KC_Q, KC_R),       ENCODER_CCW_CW(BL_DOWN, BL_UP),
+        ENCODER_CCW_CW(BL_DOWN, BL_UP),   ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+    },
+    [_FN3] = {
+        ENCODER_CCW_CW(MI_H_CCW(0), MI_H_CW(0)),   ENCODER_CCW_CW(MI_H_CCW(1), MI_H_CW(1)),
+        ENCODER_CCW_CW(MI_H_CCW(2), MI_H_CW(2)),   ENCODER_CCW_CW(MI_H_CCW(3), MI_H_CW(3)),
+        ENCODER_CCW_CW(MI_H_CCW(4), MI_H_CW(4)),   ENCODER_CCW_CW(MI_H_CCW(5), MI_H_CW(5)),
+        ENCODER_CCW_CW(MI_H_CCW(6), MI_H_CW(6)),   ENCODER_CCW_CW(MI_H_CCW(7), MI_H_CW(7)),
+        ENCODER_CCW_CW(MI_H_CCW(8), MI_H_CW(8)),   ENCODER_CCW_CW(MI_H_CCW(9), MI_H_CW(9)),
+        ENCODER_CCW_CW(MI_H_CCW(10), MI_H_CW(10)), ENCODER_CCW_CW(MI_H_CCW(11), MI_H_CW(11)),
+    },
+    [_FN4] = {
+        ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS),
+        ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS),
+        ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS),
+        ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS),
+        ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS),
+        ENCODER_CCW_CW(KC_TRNS, KC_TRNS), ENCODER_CCW_CW(KC_TRNS, KC_TRNS),
+    },
+};
+#else /* !ENCODER_MAP_ENABLE — default keymap: layer-aware callback */
 
 const uint16_t encoderKeysL1[24] = {
     MS_WHLD, MS_WHLU,
@@ -199,7 +316,6 @@ const uint16_t encoderKeysL1[24] = {
 };
 
 static int midiVals[12] = {64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64};
-static int encoderhues[12] = {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255};
 
 static void tap_code_catcher(uint16_t input) {
     if (input == BL_UP) {
@@ -253,6 +369,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     /* Must return false so encoder_update_kb does not also send KC_VOLU/KC_VOLD. */
     return false;
 }
+#endif /* ENCODER_MAP_ENABLE */
 
 #ifdef RAW_ENABLE
 static void set_led_range(int start, int stop, uint8_t r, uint8_t g, uint8_t b) {

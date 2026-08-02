@@ -31,11 +31,26 @@ dfu-programmer at90usb1286 flash .build/fncoder84_via.hex
 dfu-programmer at90usb1286 reset
 ```
 
+## Encoders (summary)
+
+| Action | Behaviour (default / via defaults) |
+|--------|-------------------------------------|
+| **Push** encoder | MIDI CC click (CC 1–12) |
+| **Turn** (base) | Relative MIDI CC (values 63/65) |
+| **Turn** while holding **MO(3)** | That encoder’s status LED hue |
+| VIA | All 12 knobs as `e0`–`e11` (CCW/CW remappable per layer) |
+
+Definition: `via.json` · details: [docs/UPDATE-AND-VIA.md](docs/UPDATE-AND-VIA.md)
+
+## Boot LEDs
+
+Orange chase across the 12 encoder LEDs, then settle at warm white **HSV 27/110/100**.
+
 ## Documentation
 
 | Doc | Topic |
 |-----|--------|
-| [docs/UPDATE-AND-VIA.md](docs/UPDATE-AND-VIA.md) | Full write-up of the QMK update, VIA setup, IDs, encoders, flashing |
+| [docs/UPDATE-AND-VIA.md](docs/UPDATE-AND-VIA.md) | Full write-up: QMK update, VIA, encoder map, EEPROM seed, flashing |
 | [HOST_LED_PROTOCOL.md](HOST_LED_PROTOCOL.md) | Desktop app Raw HID LED status protocol (`0xFE`) |
 
 ## USB IDs

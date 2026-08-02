@@ -75,10 +75,21 @@ Applied on both **fncoder84** and **fncoder24**.
 
 ### Base keymap (fncoder84)
 
-- Layer 0: QWERTY + encoder MIDI CC (relative on base; absolute / RGB / keys on other layers)
-- Custom `MI_CHn_Click` keycodes for MIDI CC gate-style presses
+- Layer 0: QWERTY + encoder MIDI CC (relative on base; layer-specific turns — see VIA encoder table)
+- Custom `MI_CHn_Click` keycodes for MIDI CC gate-style presses (encoder push)
 - `MO(3)+R` → bootloader (`QK_BOOT`)
+- `MO(3)` + encoder **turn** → that encoder’s status LED hue (per-LED, not global RGB)
 - Nav cluster key order: **Home → PgUp → PgDn** (PgUp between Home and PgDown)
+
+### Boot LED animation & default colour
+
+Restored from pre-refactor firmware (`506c716`):
+
+1. Enable RGB; start dark
+2. Chase: each of the 12 encoder LEDs flashes warm-orange (`HSV 17/180/255`) for 50 ms, then off
+3. Settle: warm white **HSV 27 / 110 / 100** (not full-bright cool white)
+
+Defaults also live in `keyboard.json` → `rgblight.default` (`hue` 27, `sat` 110, `val` 100). Applied in `keyboard_post_init_user` with `*_noeeprom` so stale VIA/EEPROM lighting cannot stick at boot.
 
 ---
 
@@ -100,6 +111,7 @@ Update any desktop tools that still open `FEED:F084` / `FEED:F024`.
 ### Firmware
 
 - Keymap: `keyboards/fncoder84/keymaps/via/` (`VIA_ENABLE = yes`, includes default keymap)
+- `ENCODER_MAP_ENABLE = yes` — required for VIA to read/write rotary CCW/CW keycodes
 - `dynamic_keymap.layer_count`: **5** (matches default layers)
 - Build: `qmk compile -kb fncoder84 -km via`
 
@@ -113,11 +125,40 @@ keyboards/fncoder84/via.json
 
 **Do not** enable “Use V2 definitions” — V2 expects a `lighting` field and rejects V3 `menus` / `keycodes`.
 
+### Encoders in VIA (all 12)
+
+The top-row encoder positions are tagged as VIA rotaries **`e0`–`e11`** (matrix click `0,0`–`0,11` + rotation). In VIA you should see each as a **knob**: assign **CCW** and **CW** keycodes per layer.
+
+| Firmware path | How rotation works |
+|---------------|--------------------|
+| **`via`** | `encoder_map` (VIA-remappable). See defaults below. |
+| **`default`** | Legacy `encoder_update_user` (same behaviours, not VIA-remappable) |
+
+#### Default encoder map (`via` keymap)
+
+| Layer | Hold / when active | Turn behaviour |
+|-------|--------------------|----------------|
+| **Base** | — | Relative **MIDI CC** channel 1, controllers **1–12**, values **63** (CW) / **65** (CCW) |
+| **FN1** | MO(1) | Same relative MIDI CC |
+| **FN2** | MO(2) | Scroll / arrows / letter keys / backlight / volume (legacy pairs) |
+| **FN3** | **MO(3)** | **Per-encoder status LED hue** — only that knob’s LED cycles hue (sat/val 255), step of 4 |
+| **FN4** | MO(4) | Transparent (`KC_TRNS`) |
+
+Encoder **push** (matrix) is separate: base layer `MI_CH1`…`MI_CH12` still send MIDI CC click (127/0).
+
+#### EEPROM note (encoder turns empty after first VIA flash)
+
+Matrix keymaps live in VIA EEPROM from the first VIA connect. **`encoder_map` only appears in EEPROM after a reset/seed.** If the board already had valid VIA data *before* `ENCODER_MAP_ENABLE`, rotation slots can stay `KC_NO` (clicks work, turns do nothing).
+
+Firmware seeds the full encoder map from flash defaults once per **encoder-map version** (user EEPROM magic `0xA84E` + version byte). Bump `FNCODER_ENCODER_MAP_VER` in `keymap.c` when defaults change so boards re-seed on next boot. Full VIA “reset keymap” / clear EEPROM also reloads defaults.
+
+After changing `via.json`, **reload the draft definition** in Design, then re-check Configure. A firmware reflash is required for `ENCODER_MAP_ENABLE` / new defaults.
+
 ### Correct VIA geometry (what the screenshot shows)
 
 Top row is **16** keys, matching the hardware:
 
-**Esc + 12 encoder keys + MO(1) + MO(2) + Del**
+**Esc + 12 encoder knobs (e0–e11) + MO(1) + MO(2) + Del**
 
 | Row | Right edge (nav column) |
 |-----|-------------------------|
