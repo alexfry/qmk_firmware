@@ -65,7 +65,13 @@
         "hue_steps": 8,
         "saturation_steps": 8,
         "brightness_steps": 8,
+        "max_brightness": 255,
         "sleep": true,
+        "default": {
+            "hue": 27,
+            "sat": 110,
+            "val": 100
+        },
         "animations": {
             "breathing": true,
             "rainbow_mood": true,
@@ -75,7 +81,8 @@
             "christmas": true,
             "static_gradient": true,
             "rgb_test": true,
-            "alternating": true
+            "alternating": true,
+            "twinkle": true
         }
     },
     "features": {
@@ -87,6 +94,7 @@
         "midi": true,
         "rgblight": true,
         "backlight": true,
+        "raw": true,
         "console": false,
         "command": false
     },
@@ -106,7 +114,9 @@
                         0
                     ],
                     "x": 0,
-                    "y": 0
+                    "y": 0,
+                    "label": "E1",
+                    "encoder": 0
                 },
                 {
                     "matrix": [
@@ -114,7 +124,9 @@
                         1
                     ],
                     "x": 1,
-                    "y": 0
+                    "y": 0,
+                    "label": "E2",
+                    "encoder": 1
                 },
                 {
                     "matrix": [
@@ -122,7 +134,9 @@
                         2
                     ],
                     "x": 2,
-                    "y": 0
+                    "y": 0,
+                    "label": "E3",
+                    "encoder": 2
                 },
                 {
                     "matrix": [
@@ -130,7 +144,9 @@
                         3
                     ],
                     "x": 3,
-                    "y": 0
+                    "y": 0,
+                    "label": "E4",
+                    "encoder": 3
                 },
                 {
                     "matrix": [
@@ -194,7 +210,9 @@
                         3
                     ],
                     "x": 3,
-                    "y": 2
+                    "y": 2,
+                    "h": 2,
+                    "label": "+"
                 },
                 {
                     "matrix": [
@@ -250,7 +268,9 @@
                         3
                     ],
                     "x": 3,
-                    "y": 4
+                    "y": 4,
+                    "h": 2,
+                    "label": "Enter"
                 },
                 {
                     "matrix": [
@@ -258,15 +278,18 @@
                         0
                     ],
                     "x": 0,
-                    "y": 5
+                    "y": 5,
+                    "w": 2,
+                    "label": "0"
                 },
                 {
                     "matrix": [
                         5,
                         1
                     ],
-                    "x": 1,
-                    "y": 5
+                    "x": 2,
+                    "y": 5,
+                    "label": "."
                 }
             ]
         }

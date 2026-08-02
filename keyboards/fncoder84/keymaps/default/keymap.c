@@ -213,8 +213,10 @@ static void midi_click(uint8_t cc, bool pressed) {
 }
 
 #ifdef RAW_ENABLE
-/* Experiment default: stream on so PCoIP apps see events without a setup handshake. */
-static bool    fncoder_hid_stream_enabled = true;
+/* Off by default so unsolicited 0xFD reports do not desync VIA's Raw HID
+ * command/response pairing. Host apps (and the monitor script) send
+ * FC 01 01 (STREAM on) after open. */
+static bool    fncoder_hid_stream_enabled = false;
 static uint8_t fncoder_evt_seq            = 0;
 
 static void fncoder_raw_send_event(uint8_t msg_type, uint8_t index, uint8_t payload) {

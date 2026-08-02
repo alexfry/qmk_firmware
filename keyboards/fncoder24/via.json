@@ -1,46 +1,63 @@
 {
-    "name": "FnCoder24",
-    "vendorId": "AF84",
-    "productId": "0024",
-    "matrix": {
-        "rows": 6,
-        "cols": 4
-    },
-    "layouts": {
-        "keymap": [
-            [
-                "0,0",
-                "0,1",
-                "0,2",
-                "0,3"
-            ],
-            [
-                "1,0",
-                "1,1",
-                "1,2",
-                "1,3"
-            ],
-            [
-                "2,0",
-                "2,1",
-                "2,2",
-                "2,3"
-            ],
-            [
-                "3,0",
-                "3,1",
-                "3,2"
-            ],
-            [
-                "4,0",
-                "4,1",
-                "4,2",
-                "4,3"
-            ],
-            [
-                "5,0",
-                "5,1"
-            ]
-        ]
-    }
+  "name": "FnCoder24",
+  "vendorId": "0xAF84",
+  "productId": "0x0024",
+  "matrix": {
+    "rows": 6,
+    "cols": 4
+  },
+  "keycodes": ["qmk_lighting"],
+  "menus": ["qmk_backlight_rgblight"],
+  "customKeycodes": [
+    {"name": "MI_CH1", "title": "MIDI CC0 Click (enc 0)", "shortName": "MC1"},
+    {"name": "MI_CH2", "title": "MIDI CC1 Click (enc 1)", "shortName": "MC2"},
+    {"name": "MI_CH3", "title": "MIDI CC2 Click (enc 2)", "shortName": "MC3"},
+    {"name": "MI_CH4", "title": "MIDI CC3 Click (enc 3)", "shortName": "MC4"}
+  ],
+  "layouts": {
+    "keymap": [
+      [
+        "0,0\n\n\n\n\n\n\n\n\ne0",
+        "0,1\n\n\n\n\n\n\n\n\ne1",
+        "0,2\n\n\n\n\n\n\n\n\ne2",
+        "0,3\n\n\n\n\n\n\n\n\ne3"
+      ],
+      [
+        "1,0",
+        "1,1",
+        "1,2",
+        "1,3"
+      ],
+      [
+        "2,0",
+        "2,1",
+        "2,2",
+        {
+          "h": 2
+        },
+        "2,3"
+      ],
+      [
+        "3,0",
+        "3,1",
+        "3,2"
+      ],
+      [
+        "4,0",
+        "4,1",
+        "4,2",
+        {
+          "h": 2
+        },
+        "4,3"
+      ],
+      [
+        {
+          "w": 2
+        },
+        "5,0",
+        "5,1"
+      ]
+    ]
+  }
 }

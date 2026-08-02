@@ -87,7 +87,7 @@ data[2...] = payload
 | `0x01` | STREAM | `data[2]` = `0` off / `1` on | Enable/disable keyboard→host TURN/BUTTON reports |
 | `0x02` | PING | `data[2]` = cookie (any byte) | Keyboard replies with PONG (see below) |
 
-**Defaults:** stream is **on** after boot (easy PCoIP bring-up). Use STREAM off if you want silence when no app is listening.
+**Defaults:** stream is **off** after boot so VIA’s Raw HID command/response pairing is not disturbed by unsolicited `0xFD` events. Host apps must send **`FC 01 01`** (STREAM on) after open — the monitor script does this.
 
 ### PING example
 

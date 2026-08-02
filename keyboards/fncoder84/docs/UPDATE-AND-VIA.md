@@ -14,10 +14,12 @@ The `alexfry/qmk_firmware` fork was far behind upstream QMK (merge-base ~April 2
 
 **Active boards (this work):**
 
-| Board | Role | MCU | Encoders |
-|-------|------|-----|----------|
-| **fncoder84** | 84% / 75%-style + nav | `at90usb1286` | 12 |
-| **fncoder24** | Keypad | `atmega32u4` | 4 |
+| Board | Role | MCU | Encoders | USB |
+|-------|------|-----|----------|-----|
+| **fncoder84** | 84% / 75%-style + nav | `at90usb1286` | 12 | `AF84:0084` |
+| **fncoder24** | Number pad | `atmega32u4` | 4 | `AF84:0024` |
+
+Both share: VIA + `encoder_map`, boot LED chase + warm white settle, Raw HID LEDs (`0xFE`) / control (`0xFC`) / encoder events (`0xFD`), MIDI dual-emit. Board-specific notes: [fncoder24/HOST_RAW_HID_PROTOCOL.md](../../fncoder24/HOST_RAW_HID_PROTOCOL.md).
 
 Other trees (`FnCoder24_021`, `FnCoder24_ProMicro`, `FnCoder84 024`, `FnCoder84_ledTest`, `fncoder77`) were **left in place** and not modernized.
 
